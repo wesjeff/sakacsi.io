@@ -1,14 +1,13 @@
-/* Import Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
 
 html {
   overflow-y: scroll;
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* Internet Explorer and Edge */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 html::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, Opera */
+  display: none;
 }
 
 body {
@@ -26,7 +25,6 @@ body {
   z-index: 1000;
   font-family: 'Poppins', sans-serif;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-  /* Prevent navbar from shifting when scrollbar appears */
   box-sizing: border-box;
 }
 
@@ -43,7 +41,6 @@ body {
   margin-right: 0;
 }
 
-/* Location and time section with status indicator */
 .location-time {
   color: #fff;
   font-size: 18px;
@@ -84,7 +81,6 @@ body {
   opacity: 0.9;
 }
 
-/* Navigation links */
 .nav-links {
   list-style: none;
   display: flex;
@@ -97,7 +93,7 @@ body {
   color: #fff;
   text-decoration: none;
   font-size: 18px;
-  font-weight: 400;
+  font-weight: 600;
   transition: all 0.3s ease;
   padding: 8px 12px;
   border-radius: 8px;
@@ -106,12 +102,18 @@ body {
   display: flex;
   align-items: center;
   gap: 8px;
+  min-width: fit-content;
+}
+
+.nav-link:not(.active) {
+  opacity: 0.7;
 }
 
 .nav-link:hover {
   color: #a3d5ff;
   background-color: rgba(163, 213, 255, 0.1);
   transform: translateY(-2px);
+  opacity: 1;
 }
 
 .nav-link::before {
@@ -130,11 +132,11 @@ body {
   width: 80%;
 }
 
-/* Active page styling */
 .nav-link.active {
   background-color: rgba(163, 213, 255, 0.2);
   color: #a3d5ff;
   font-weight: 600;
+  opacity: 1;
 }
 
 .nav-link.active::before {
@@ -142,10 +144,10 @@ body {
   background-color: #a3d5ff;
 }
 
-/* Navigation icons and text */
 .nav-icon {
   font-size: 16px;
   transition: transform 0.3s ease;
+  flex-shrink: 0;
 }
 
 .nav-link:hover .nav-icon {
@@ -154,9 +156,9 @@ body {
 
 .nav-text {
   transition: all 0.3s ease;
+  flex-shrink: 0;
 }
 
-/* Mobile responsiveness */
 @media (max-width: 768px) {
   .navbar-content {
     flex-direction: column;
@@ -220,7 +222,6 @@ body {
     font-size: 13px;
   }
 
-  /* Hide text on very small screens, show only icons */
   @media (max-width: 350px) {
     .nav-text {
       display: none;
