@@ -1,8 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Resume.css';
 
 export default function Resume() {
   const [activeTab, setActiveTab] = useState('experience');
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    // Trigger animations after component mounts
+    setIsLoaded(true);
+  }, []);
 
   const skills = {
     programming: [
@@ -81,8 +87,8 @@ export default function Resume() {
     }
   ];
 
-  const SkillBar = ({ skill, delay = 0 }) => (
-    <div className="skill-item">
+  const SkillBar = ({ skill, delay = 0, categoryIndex = 0 }) => (
+    <div className="skill-item" style={{ animationDelay: `${1 + categoryIndex * 0.2 + delay * 0.1}s` }}>
       <div className="skill-header">
         <span className="skill-name">{skill.name}</span>
         <span className="skill-level">{skill.level}%</span>
@@ -92,7 +98,7 @@ export default function Resume() {
           className="skill-bar"
           style={{
             width: activeTab === 'skills' ? `${skill.level}%` : '0%',
-            transitionDelay: `${delay}ms`
+            transitionDelay: `${1.2 + categoryIndex * 0.2 + delay * 0.1}s`
           }}
         ></div>
       </div>
@@ -108,11 +114,30 @@ export default function Resume() {
     document.body.removeChild(link);
   };
 
+  const handleTabChange = (newTab) => {
+    if (newTab !== activeTab) {
+      // Add a small delay for smooth transition
+      const contentSection = document.querySelector('.content-section');
+      if (contentSection) {
+        contentSection.style.opacity = '0';
+        contentSection.style.transform = 'translateY(20px)';
+        
+        setTimeout(() => {
+          setActiveTab(newTab);
+          contentSection.style.opacity = '1';
+          contentSection.style.transform = 'translateY(0)';
+        }, 150);
+      } else {
+        setActiveTab(newTab);
+      }
+    }
+  };
+
   const renderContent = () => {
     switch(activeTab) {
       case 'experience':
         return (
-          <div className="content-section">
+          <div className="content-section" key="experience">
             <h2 className="section-title">Professional Experience</h2>
             <div className="experience-grid">
               {experiences.map((exp, index) => (
@@ -148,7 +173,7 @@ export default function Resume() {
 
       case 'education':
         return (
-          <div className="content-section">
+          <div className="content-section" key="education">
             <h2 className="section-title">Education</h2>
             <div className="education-card">
               <div className="education-header">
@@ -188,7 +213,7 @@ export default function Resume() {
 
       case 'skills':
         return (
-          <div className="content-section">
+          <div className="content-section" key="skills">
             <h2 className="section-title">Technical Skills</h2>
             <div className="skills-grid">
               <div className="skills-category">
@@ -197,7 +222,7 @@ export default function Resume() {
                   <h3 className="skills-category-title">Programming</h3>
                 </div>
                 {skills.programming.map((skill, index) => (
-                  <SkillBar key={skill.name} skill={skill} delay={index * 100} />
+                  <SkillBar key={skill.name} skill={skill} delay={index} categoryIndex={0} />
                 ))}
               </div>
 
@@ -207,7 +232,7 @@ export default function Resume() {
                   <h3 className="skills-category-title">Security Tools</h3>
                 </div>
                 {skills.security.map((skill, index) => (
-                  <SkillBar key={skill.name} skill={skill} delay={index * 100} />
+                  <SkillBar key={skill.name} skill={skill} delay={index} categoryIndex={1} />
                 ))}
               </div>
 
@@ -217,7 +242,7 @@ export default function Resume() {
                   <h3 className="skills-category-title">Cloud & DevOps</h3>
                 </div>
                 {skills.cloud.map((skill, index) => (
-                  <SkillBar key={skill.name} skill={skill} delay={index * 100} />
+                  <SkillBar key={skill.name} skill={skill} delay={index} categoryIndex={2} />
                 ))}
               </div>
             </div>
@@ -226,7 +251,7 @@ export default function Resume() {
 
       case 'certifications':
         return (
-          <div className="content-section">
+          <div className="content-section" key="certifications">
             <h2 className="section-title">Certifications</h2>
             <div className="certifications-grid">
               {certifications.map((cert, index) => (
@@ -252,7 +277,7 @@ export default function Resume() {
   };
 
   return (
-    <div className="resume-container">
+    <div className={`resume-container ${isLoaded ? 'loaded' : ''}`}>
       {/* Header Section */}
       <div className="header-section">
         <div className="header-container">
@@ -297,7 +322,7 @@ export default function Resume() {
             ].map((tab) => (
               <button
                 key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
+                onClick={() => handleTabChange(tab.id)}
                 className={`nav-tab ${activeTab === tab.id ? 'active' : ''}`}
               >
                 <span>{tab.icon}</span>
