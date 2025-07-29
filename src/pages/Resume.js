@@ -40,6 +40,8 @@ export default function Resume() {
       location: 'Dallas, TX',
       period: 'June 2025 – Present',
       type: 'Internship',
+      logo: '/capitalone.png',
+      website: 'https://www.capitalone.com',
       highlights: [
         'Integrating Google Gemini AI to automatically process and securely analyze Jira ticket metadata',
         'Developing frameworks that monitor data flow and usage patterns in third-party applications',
@@ -52,6 +54,8 @@ export default function Resume() {
       location: 'Tallahassee, FL',
       period: 'February 2023 – Present',
       type: 'Part-time',
+      logo: '/fsu.png',
+      website: 'https://www.fsu.edu',
       highlights: [
         'Utilizing security tools such as CrowdStrike Falcon, Microsoft Defender, and Nexpose',
         'Analyzing Splunk network logs to identify potential threats',
@@ -64,10 +68,25 @@ export default function Resume() {
       location: 'Tampa, FL',
       period: 'May 2024 – August 2024',
       type: 'Internship',
+      logo: '/gte.jpg',
+      website: 'https://www.gtefinancial.org',
       highlights: [
         'Created internal email phishing campaigns sent to 500+ employees',
         'Applied cloud security tools such as Wiz and InsightVM',
         'Addressed fraudulent activity by developing mobile application concepts'
+      ]
+    },
+    {
+      title: 'Early Childhood Educator',
+      company: 'Pinellas County School Board',
+      location: 'St. Petersburg, FL',
+      period: 'June 2023 – July 2023',
+      type: 'Internship',
+      logo: '/pcsb.png',
+      website: 'https://www.pcsb.org',
+      highlights: [
+        'Educated 20 kindergarten-aged children with hands-on assistance from a current teacher',
+        'Tutored students on literacy skills ranging from learning letters to phonics and word pronunciation'
       ]
     }
   ];
@@ -77,13 +96,17 @@ export default function Resume() {
       name: 'AWS Certified Cloud Practitioner',
       issuer: 'Amazon Web Services',
       date: 'July 2025',
-      icon: '☁️'
+      icon: '☁️',
+      isImage: true,
+      imageSrc: '/awsccp.png'
     },
     {
       name: 'Certified Secure Software Engineer (CSSE)',
       issuer: 'Professional Certification',
       date: 'June 2025',
-      icon: '🔐'
+      icon: '🔐',
+      isImage: true,
+      imageSrc: '/capitalone.png'
     }
   ];
 
@@ -145,7 +168,21 @@ export default function Resume() {
                   <div className="experience-header">
                     <div>
                       <h3 className="experience-title">{exp.title}</h3>
-                      <p className="experience-company">{exp.company}</p>
+                      <div className="experience-company-container">
+                        <img 
+                          src={exp.logo} 
+                          alt={`${exp.company} logo`}
+                          className="company-logo"
+                        />
+                        <a 
+                          href={exp.website}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="experience-company-link"
+                        >
+                          {exp.company}
+                        </a>
+                      </div>
                       <p className="experience-location">
                         <span>📍</span> {exp.location}
                       </p>
@@ -197,9 +234,15 @@ export default function Resume() {
                     'Computer and Network System Administration',
                     'Computer Security Fundamentals',
                     'Data Structures and Algorithms (C++)',
-                    'Web Applications Development (Node.js)',
+                    'Web Applications Development (React + Node.js)',
                     'Unix Tools',
-                    'Cybercrime Forensics'
+                    'Cybercrime Forensics',
+                    'Databases',
+                    'Computer Science Ethics',
+                    'Criminology',
+                    'Forensics in Crime',
+                    'Law Enforcement',
+                    'Courts'
                   ].map((course, index) => (
                     <span key={index} className="coursework-item">
                       {course}
@@ -256,8 +299,18 @@ export default function Resume() {
             <div className="certifications-grid">
               {certifications.map((cert, index) => (
                 <div key={index} className="certification-card">
-                  <div className="certification-icon">
-                    {cert.icon}
+                  <div className="certification-logo">
+                    {cert.isImage ? (
+                      <img 
+                        src={cert.imageSrc} 
+                        alt={cert.name}
+                        className="certification-image"
+                      />
+                    ) : (
+                      <div className="certification-icon">
+                        {cert.icon}
+                      </div>
+                    )}
                   </div>
                   <h3 className="certification-title">{cert.name}</h3>
                   <p className="certification-issuer">{cert.issuer}</p>
@@ -282,30 +335,27 @@ export default function Resume() {
       <div className="header-section">
         <div className="header-container">
           <h1 className="header-title">Zachary Sakacsi</h1>
-          <p className="header-subtitle">Cybersecurity Professional</p>
+          <p className="header-subtitle">Cybersecurity Student</p>
           
           <div className="contact-info">
-            <div className="contact-item">
-              <span>📍</span>
-              <span>St. Petersburg, FL</span>
-            </div>
-            <div className="contact-item">
-              <span>📞</span>
-              <span>(727) 239-5355</span>
-            </div>
-            <div className="contact-item">
-              <span>✉️</span>
-              <span>zsakacsi@gmail.com</span>
-            </div>
-            <div className="contact-item">
-              <span>💼</span>
+            <a 
+              href="https://linkedin.com/in/zacharysakacsi/" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="contact-item contact-link"
+            >
+              <img 
+                src="/linkedin.png" 
+                alt="LinkedIn"
+                className="contact-icon"
+              />
               <span>linkedin.com/in/zacharysakacsi/</span>
-            </div>
+            </a>
           </div>
 
           <button onClick={handleDownloadPDF} className="download-btn">
             <span>📥</span>
-            Download PDF Resume
+            Download Resume
           </button>
         </div>
       </div>
