@@ -1,4 +1,3 @@
-// Terminal commands and code snippets for cybersecurity theme
 export const terminalCommands = [
   "$ nmap -sS -O 192.168.1.10",
   "$ sqlmap -u 'http://192.168.1.20/product.php?id=2' --dbs",

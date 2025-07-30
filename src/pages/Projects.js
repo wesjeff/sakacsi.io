@@ -37,36 +37,68 @@ const TerminalScrolling = () => {
       // Initialize lines with random positions and properties
       linesRef.current = [];
       
-      const columnCount = Math.floor(rect.width / 300); // Commands every 300px horizontally
+      const columnCount = Math.floor(rect.width / 350); // Commands every 350px horizontally
       
       for (let col = 0; col < columnCount; col++) {
-        for (let i = 0; i < 20; i++) { // 20 lines per column
+        for (let i = 0; i < 15; i++) { // 15 lines per column (reduced from 20)
           linesRef.current.push({
             text: terminalCommands[Math.floor(Math.random() * terminalCommands.length)],
-            x: col * 300 + Math.random() * 200,
-            y: -Math.random() * 1000, // Start above screen
-            speed: Math.random() * 0.8 + 0.4, // Vertical movement speed
-            opacity: Math.random() * 0.4 + 0.15,
+            x: col * 350 + Math.random() * 250,
+            y: -Math.random() * 1500, // Start higher above screen
+            speed: Math.random() * 0.4 + 0.2, // Slower speed (reduced from 0.8 + 0.4)
+            opacity: Math.random() * 0.3 + 0.1, // Slightly reduced opacity
             age: Math.random() * 1000,
-            fontSize: Math.random() > 0.7 ? 16 : 14, // Mix of font sizes
-            color: Math.random() > 0.6 ? 'orange' : Math.random() > 0.3 ? 'green' : 'blue'
+            fontSize: Math.random() > 0.7 ? 15 : 13, // Slightly smaller fonts
+            color: getRandomColor()
           });
         }
       }
     };
 
+    // Enhanced color palette matching the page theme
+    const getRandomColor = () => {
+      const colors = [
+        'primary-blue',    // Main blue theme
+        'secondary-blue',  // Lighter blue
+        'accent-cyan',     // Cyan accent
+        'highlight',       // Orange/amber highlight
+        'success',         // Green success color
+        'purple',          // Purple accent
+        'teal',           // Teal variation
+        'pink'            // Pink accent
+      ];
+      return colors[Math.floor(Math.random() * colors.length)];
+    };
+
+    const getColorValue = (colorName, opacity) => {
+      const colors = {
+        'primary-blue': `rgba(100, 181, 255, ${opacity})`,
+        'secondary-blue': `rgba(59, 130, 246, ${opacity})`,
+        'accent-cyan': `rgba(34, 211, 238, ${opacity})`,
+        'highlight': `rgba(251, 191, 36, ${opacity})`,
+        'success': `rgba(34, 197, 94, ${opacity})`,
+        'purple': `rgba(168, 85, 247, ${opacity})`,
+        'teal': `rgba(20, 184, 166, ${opacity})`,
+        'pink': `rgba(236, 72, 153, ${opacity})`
+      };
+      return colors[colorName] || colors['primary-blue'];
+    };
+
     const animate = () => {
       const rect = canvas.getBoundingClientRect();
       
-      // Clear canvas completely for crisp text
-      ctx.fillStyle = '#1a1a2e';
+      // Clear canvas completely to prevent trails
+      ctx.clearRect(0, 0, rect.width, rect.height);
+      
+      // Add darker background overlay
+      ctx.fillStyle = 'rgba(5, 15, 35, 0.95)';
       ctx.fillRect(0, 0, rect.width, rect.height);
 
       ctx.textAlign = 'left';
       ctx.textBaseline = 'top';
 
       linesRef.current.forEach((line) => {
-        // Move line from top to bottom
+        // Simple, smooth movement - just like the original
         line.y += line.speed;
         line.age++;
 
@@ -75,43 +107,37 @@ const TerminalScrolling = () => {
         
         // Calculate opacity with fade zones
         let currentOpacity = line.opacity;
-        if (line.y < 100) {
-          // Fade in from top
-          currentOpacity *= Math.max(0, line.y / 100);
-        } else if (line.y > rect.height - 150) {
-          // Fade out at bottom
-          currentOpacity *= Math.max(0, (rect.height - line.y) / 150);
+        if (line.y < 150) {
+          currentOpacity *= Math.max(0, line.y / 150);
+        } else if (line.y > rect.height - 200) {
+          currentOpacity *= Math.max(0, (rect.height - line.y) / 200);
         }
 
-        // Set color based on line type with better visibility
-        if (line.color === 'orange') {
-          ctx.fillStyle = `rgba(234, 88, 12, ${Math.min(0.7, currentOpacity)})`;
-          ctx.shadowColor = `rgba(234, 88, 12, ${currentOpacity * 0.5})`;
-        } else if (line.color === 'green') {
-          ctx.fillStyle = `rgba(34, 197, 94, ${Math.min(0.6, currentOpacity)})`;
-          ctx.shadowColor = `rgba(34, 197, 94, ${currentOpacity * 0.5})`;
-        } else {
-          ctx.fillStyle = `rgba(59, 130, 246, ${Math.min(0.5, currentOpacity)})`;
-          ctx.shadowColor = `rgba(59, 130, 246, ${currentOpacity * 0.5})`;
-        }
+        // Enhanced glow effect for terminal commands
+        ctx.shadowColor = getColorValue(line.color, currentOpacity * 0.8);
+        ctx.shadowBlur = 8;
         
-        ctx.shadowBlur = 1;
+        ctx.fillStyle = getColorValue(line.color, Math.min(0.8, currentOpacity));
         
-        // Draw the text with crisp rendering
-        if (currentOpacity > 0.05) {
+        // Draw the text with enhanced glow
+        if (currentOpacity > 0.03) {
+          // Draw with glow effect
+          ctx.fillText(line.text, line.x, line.y);
+          ctx.shadowBlur = 15;
           ctx.fillText(line.text, line.x, line.y);
         }
         ctx.shadowBlur = 0;
+        ctx.shadowColor = 'transparent';
 
         // Reset line if it's completely off screen
-        if (line.y > rect.height + 100) {
+        if (line.y > rect.height + 150) {
           line.text = terminalCommands[Math.floor(Math.random() * terminalCommands.length)];
-          line.y = -Math.random() * 200 - 50;
+          line.y = -Math.random() * 300 - 100;
           line.x = Math.random() * rect.width;
-          line.speed = Math.random() * 0.8 + 0.4;
-          line.opacity = Math.random() * 0.4 + 0.15;
-          line.fontSize = Math.random() > 0.7 ? 16 : 14;
-          line.color = Math.random() > 0.6 ? 'orange' : Math.random() > 0.3 ? 'green' : 'blue';
+          line.speed = Math.random() * 0.4 + 0.2;
+          line.opacity = Math.random() * 0.3 + 0.1;
+          line.fontSize = Math.random() > 0.7 ? 15 : 13;
+          line.color = getRandomColor();
           line.age = 0;
         }
       });
@@ -188,15 +214,8 @@ const projects = [
 ];
 
 export default function Projects() {
-  const [isLoaded, setIsLoaded] = useState(false);
-
-  useEffect(() => {
-    // Trigger animations after component mounts
-    setIsLoaded(true);
-  }, []);
-
   return (
-    <div className={`projects-container ${isLoaded ? 'loaded' : ''}`}>
+    <div className="projects-container loaded">
       <TerminalScrolling />
       
       <div className="projects-header-section">
