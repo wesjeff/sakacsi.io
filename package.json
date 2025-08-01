@@ -2,7 +2,6 @@
   "name": "website",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://main.dr7bmfwubczvd.amplifyapp.com",
   "engines": {
     "node": ">=20.0.0"
   },
