@@ -1,9 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import ProjectCard from '../components/ProjectCard';
 import { terminalCommands } from '../components/terminalCommands';
 import './Projects.css';
 
-// Terminal-style scrolling text component
 const TerminalScrolling = () => {
   const canvasRef = useRef(null);
   const animationRef = useRef(null);
@@ -15,47 +14,46 @@ const TerminalScrolling = () => {
 
     const ctx = canvas.getContext('2d');
     
-    // Improve text rendering quality
     ctx.textRenderingOptimization = 'optimizeQuality';
     ctx.imageSmoothingEnabled = true;
     
     const resizeCanvas = () => {
       const dpr = window.devicePixelRatio || 1;
-      const rect = canvas.getBoundingClientRect();
       
-      // Set actual size in pixels
-      canvas.width = rect.width * dpr;
-      canvas.height = rect.height * dpr;
+      // Get actual viewport dimensions
+      const width = window.innerWidth;
+      const height = window.innerHeight;
       
-      // Set display size
-      canvas.style.width = rect.width + 'px';
-      canvas.style.height = rect.height + 'px';
+      // Set canvas size to match viewport
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
       
-      // Scale context for high DPI displays
+      canvas.style.width = width + 'px';
+      canvas.style.height = height + 'px';
+      
       ctx.scale(dpr, dpr);
       
-      // Initialize lines with random positions and properties
+      // Regenerate lines for new dimensions
       linesRef.current = [];
       
-      const columnCount = Math.floor(rect.width / 350); // Commands every 350px horizontally
+      const columnCount = Math.floor(width / 350);
       
       for (let col = 0; col < columnCount; col++) {
-        for (let i = 0; i < 15; i++) { // 15 lines per column (reduced from 20)
+        for (let i = 0; i < 15; i++) {
           linesRef.current.push({
             text: terminalCommands[Math.floor(Math.random() * terminalCommands.length)],
             x: col * 350 + Math.random() * 250,
-            y: -Math.random() * 1500, // Start higher above screen
-            speed: Math.random() * 0.4 + 0.2, // Slower speed (reduced from 0.8 + 0.4)
-            opacity: Math.random() * 0.3 + 0.1, // Slightly reduced opacity
+            y: -Math.random() * 1500,
+            speed: Math.random() * 0.4 + 0.2,
+            opacity: Math.random() * 0.3 + 0.1,
             age: Math.random() * 1000,
-            fontSize: Math.random() > 0.7 ? 15 : 13, // Slightly smaller fonts
+            fontSize: Math.random() > 0.7 ? 15 : 13,
             color: getRandomColor()
           });
         }
       }
     };
 
-    // Enhanced color palette matching the page theme
     const getRandomColor = () => {
       const colors = [
         'primary-blue',    // Main blue theme
@@ -85,41 +83,35 @@ const TerminalScrolling = () => {
     };
 
     const animate = () => {
-      const rect = canvas.getBoundingClientRect();
+      const width = window.innerWidth;
+      const height = window.innerHeight;
       
-      // Clear canvas completely to prevent trails
-      ctx.clearRect(0, 0, rect.width, rect.height);
+      ctx.clearRect(0, 0, width, height);
       
-      // Add darker background overlay
       ctx.fillStyle = 'rgba(5, 15, 35, 0.95)';
-      ctx.fillRect(0, 0, rect.width, rect.height);
+      ctx.fillRect(0, 0, width, height);
 
       ctx.textAlign = 'left';
       ctx.textBaseline = 'top';
 
       linesRef.current.forEach((line) => {
-        // Simple, smooth movement - just like the original
         line.y += line.speed;
         line.age++;
 
-        // Set font with proper rendering
         ctx.font = `${line.fontSize}px 'Courier New', 'Monaco', monospace`;
         
-        // Calculate opacity with fade zones
         let currentOpacity = line.opacity;
         if (line.y < 150) {
           currentOpacity *= Math.max(0, line.y / 150);
-        } else if (line.y > rect.height - 200) {
-          currentOpacity *= Math.max(0, (rect.height - line.y) / 200);
+        } else if (line.y > height - 200) {
+          currentOpacity *= Math.max(0, (height - line.y) / 200);
         }
 
-        // Enhanced glow effect for terminal commands
         ctx.shadowColor = getColorValue(line.color, currentOpacity * 0.8);
         ctx.shadowBlur = 8;
         
         ctx.fillStyle = getColorValue(line.color, Math.min(0.8, currentOpacity));
         
-        // Draw the text with enhanced glow
         if (currentOpacity > 0.03) {
           // Draw with glow effect
           ctx.fillText(line.text, line.x, line.y);
@@ -129,11 +121,10 @@ const TerminalScrolling = () => {
         ctx.shadowBlur = 0;
         ctx.shadowColor = 'transparent';
 
-        // Reset line if it's completely off screen
-        if (line.y > rect.height + 150) {
+        if (line.y > height + 150) {
           line.text = terminalCommands[Math.floor(Math.random() * terminalCommands.length)];
           line.y = -Math.random() * 300 - 100;
-          line.x = Math.random() * rect.width;
+          line.x = Math.random() * width;
           line.speed = Math.random() * 0.4 + 0.2;
           line.opacity = Math.random() * 0.3 + 0.1;
           line.fontSize = Math.random() > 0.7 ? 15 : 13;
@@ -145,14 +136,24 @@ const TerminalScrolling = () => {
       animationRef.current = requestAnimationFrame(animate);
     };
 
+    // Add throttling to resize event to improve performance
+    let resizeTimeout;
+    const handleResize = () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(resizeCanvas, 100);
+    };
+
     resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
+    window.addEventListener('resize', handleResize);
     animationRef.current = requestAnimationFrame(animate);
 
     return () => {
-      window.removeEventListener('resize', resizeCanvas);
+      window.removeEventListener('resize', handleResize);
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
+      }
+      if (resizeTimeout) {
+        clearTimeout(resizeTimeout);
       }
     };
   }, []);

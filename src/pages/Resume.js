@@ -6,7 +6,6 @@ export default function Resume() {
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    // Trigger animations after component mounts
     setIsLoaded(true);
   }, []);
 
@@ -38,7 +37,7 @@ export default function Resume() {
       title: 'Cybersecurity Intern',
       company: 'Capital One',
       location: 'Dallas, TX',
-      period: 'June 2025 – Present',
+      period: 'June 2025 – August 2025',
       type: 'Internship',
       logo: '/capitalone.png',
       website: 'https://www.capitalone.com',
@@ -139,7 +138,6 @@ export default function Resume() {
 
   const handleTabChange = (newTab) => {
     if (newTab !== activeTab) {
-      // Add a small delay for smooth transition
       const contentSection = document.querySelector('.content-section');
       if (contentSection) {
         contentSection.style.opacity = '0';
@@ -335,8 +333,6 @@ export default function Resume() {
       <div className="header-section">
         <div className="header-container">
           <h1 className="header-title">Zachary Sakacsi</h1>
-          <p className="header-subtitle">Cybersecurity Student</p>
-          
           <div className="contact-info">
             <a 
               href="https://linkedin.com/in/zacharysakacsi/" 
@@ -357,6 +353,8 @@ export default function Resume() {
             <span>📥</span>
             Download Resume
           </button>
+          <p className="header-subtitle">Cybersecurity and networking enthusiast with hands-on experience in enterprise security, cloud risk assessment, and threat detection across various environments. Skilled in leveraging tools like Splunk, AWS, CrowdStrike, and Wireshark to secure systems, automate workflows, and analyze network activity. AWS Certified Cloud Practitioner with interests in threat intelligence, network defense, and cloud security architecture.</p>   
+          
         </div>
       </div>
 
