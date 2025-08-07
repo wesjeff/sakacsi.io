@@ -1,0 +1,549 @@
+/* About Component Styles with Enhanced Animations */
+.about-container {
+  min-height: 100vh;
+  background-color: #0a1f44;
+  color: white;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  overflow-x: hidden;
+  position: relative;
+  /* Fix scroll position issues */
+  scroll-behavior: smooth;
+}
+
+/* Animation Keyframes */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-80px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(80px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
+}
+
+/* Main Content */
+.about-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 60px 20px;
+}
+
+/* Section Styling */
+.about-section {
+  margin-bottom: 80px;
+  /* Start sections visible to prevent scroll issues, animate from CSS instead */
+  opacity: 1;
+  transform: translateY(0);
+  transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Only apply initial hidden state when not loaded */
+.about-container:not(.loaded) .about-section {
+  opacity: 0;
+  transform: translateY(60px);
+}
+
+.about-section.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.about-section:first-child {
+  margin-top: 0;
+}
+
+.about-section:last-child {
+  margin-bottom: 40px;
+}
+
+.section-content {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  align-items: center;
+}
+
+/* Text Content */
+.text-content {
+  width: 100%;
+  max-width: 800px;
+  text-align: center;
+}
+
+.section-title {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: bold;
+  margin-bottom: 30px;
+  color: #ffffff;
+  position: relative;
+  opacity: 1;
+  transform: translateY(0);
+  transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.2s;
+  line-height: 1.2;
+}
+
+/* Only apply initial hidden state when not loaded */
+.about-container:not(.loaded) .section-title {
+  opacity: 0;
+  transform: translateY(-30px);
+}
+
+.about-section.visible .section-title {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.section-title::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #2978b5, #64b5ff);
+  border-radius: 2px;
+  transition: width 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.6s;
+}
+
+.about-section.visible .section-title::after {
+  width: 120px;
+}
+
+.section-description {
+  font-size: clamp(1rem, 2vw, 1.2rem);
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.description-paragraph {
+  margin-bottom: 20px;
+  opacity: 1;
+  transform: translateY(0);
+  transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Only apply initial hidden state when not loaded */
+.about-container:not(.loaded) .description-paragraph {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.about-section.visible .description-paragraph:nth-child(1) {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0.4s;
+}
+
+.about-section.visible .description-paragraph:nth-child(2) {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0.6s;
+}
+
+.about-section.visible .description-paragraph:nth-child(3) {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0.8s;
+}
+
+/* Image Content */
+.image-content {
+  width: 100%;
+  max-width: 600px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.image-carousel {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+/* Carousel Arrows - Only show if there are multiple images */
+.carousel-arrow {
+  background: rgba(41, 120, 181, 0.9);
+  border: 2px solid rgba(100, 181, 255, 0.6);
+  color: white;
+  border-radius: 50%;
+  width: 45px;
+  height: 45px;
+  font-size: 22px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  z-index: 10;
+  flex-shrink: 0;
+}
+
+.carousel-arrow:hover {
+  background: rgba(100, 181, 255, 1);
+  border-color: rgba(100, 181, 255, 1);
+  transform: scale(1.1);
+  box-shadow: 0 4px 20px rgba(100, 181, 255, 0.4);
+}
+
+.carousel-arrow:active {
+  transform: scale(0.95);
+}
+
+/* Image Container */
+.image-wrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4/3;
+  border-radius: 20px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #2978b5, #64b5ff);
+  padding: 4px;
+  opacity: 1;
+  transform: scale(1);
+  transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.3s;
+  flex-grow: 1;
+}
+
+/* Only apply initial hidden state when not loaded */
+.about-container:not(.loaded) .image-wrapper {
+  opacity: 0;
+  transform: scale(0.9);
+}
+
+.about-section.visible .image-wrapper {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.image-wrapper:hover {
+  transform: scale(1.02);
+  box-shadow: 0 20px 50px rgba(41, 120, 181, 0.4);
+}
+
+/* Image Stack */
+.image-stack {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #1a1a1a;
+}
+
+/* Images */
+.section-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 16px;
+  transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  opacity: 0;
+  transform: scale(1.05);
+}
+
+.section-image.active {
+  opacity: 1;
+  transform: scale(1);
+  z-index: 2;
+}
+
+/* Image Dots - Improved for more images */
+.image-dots {
+  position: absolute;
+  bottom: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  z-index: 5;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 6px 12px;
+  border-radius: 20px;
+  backdrop-filter: blur(10px);
+  /* Ensure dots container can grow for more images */
+  flex-wrap: wrap;
+  max-width: 90%;
+  justify-content: center;
+}
+
+.image-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.image-dot:hover {
+  border-color: rgba(100, 181, 255, 0.8);
+  background: rgba(100, 181, 255, 0.3);
+  transform: scale(1.2);
+}
+
+.image-dot.active {
+  background: rgba(100, 181, 255, 1);
+  border-color: rgba(100, 181, 255, 1);
+  transform: scale(1.3);
+  box-shadow: 0 0 10px rgba(100, 181, 255, 0.6);
+}
+
+/* Special styling for first section */
+.about-section:first-child .section-title {
+  font-size: clamp(2.5rem, 6vw, 4rem);
+}
+
+.about-section:first-child .image-wrapper {
+  background: linear-gradient(135deg, #2978b5, #64b5ff, #2978b5);
+  background-size: 200% 200%;
+}
+
+/* Alternating section backgrounds */
+.about-section:nth-child(even) {
+  position: relative;
+}
+
+.about-section:nth-child(even)::before {
+  content: '';
+  position: absolute;
+  top: -40px;
+  left: -5%;
+  right: -5%;
+  bottom: -40px;
+  background: rgba(41, 120, 181, 0.03);
+  border-radius: 20px;
+  z-index: -1;
+}
+
+/* Desktop Layout - Side by side */
+@media (min-width: 969px) {
+  .section-content {
+    flex-direction: row;
+    gap: 60px;
+    align-items: center;
+  }
+  
+  .text-content {
+    flex: 1;
+    text-align: left;
+    max-width: none;
+  }
+  
+  .image-content {
+    flex: 1;
+    max-width: none;
+  }
+  
+  .section-title::after {
+    left: 0;
+    transform: none;
+  }
+  
+  /* Alternate layouts */
+  .about-section.image-right .section-content {
+    flex-direction: row;
+  }
+  
+  .about-section.image-left .section-content {
+    flex-direction: row-reverse;
+  }
+}
+
+/* Large Desktop */
+@media (min-width: 1200px) {
+  .about-content {
+    padding: 80px 40px;
+  }
+  
+  .section-content {
+    gap: 80px;
+  }
+  
+  .about-section {
+    margin-bottom: 120px;
+  }
+}
+
+/* Tablet Portrait */
+@media (max-width: 968px) {
+  .about-content {
+    padding: 50px 20px;
+  }
+  
+  .section-content {
+    gap: 30px;
+  }
+  
+  .about-section {
+    margin-bottom: 60px;
+  }
+  
+  .carousel-arrow {
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+  }
+  
+  .image-carousel {
+    gap: 12px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+  .about-content {
+    padding: 40px 15px;
+  }
+  
+  .section-content {
+    gap: 25px;
+  }
+  
+  .about-section {
+    margin-bottom: 50px;
+  }
+  
+  .carousel-arrow {
+    width: 35px;
+    height: 35px;
+    font-size: 18px;
+  }
+  
+  .image-carousel {
+    gap: 8px;
+  }
+  
+  .image-dots {
+    gap: 6px;
+    padding: 4px 8px;
+  }
+  
+  .image-dot {
+    width: 8px;
+    height: 8px;
+  }
+}
+
+/* Very Small Mobile */
+@media (max-width: 480px) {
+  .about-content {
+    padding: 30px 10px;
+  }
+  
+  .carousel-arrow {
+    width: 32px;
+    height: 32px;
+    font-size: 16px;
+  }
+  
+  .image-carousel {
+    gap: 6px;
+  }
+  
+  /* Make dots even smaller on very small screens */
+  .image-dot {
+    width: 6px;
+    height: 6px;
+  }
+  
+  /* Reduce dot spacing for more images on small screens */
+  .image-dots {
+    gap: 4px;
+    padding: 3px 6px;
+  }
+}
+
+/* Loading state - only apply transforms when not loaded */
+.about-container:not(.loaded) .about-section {
+  opacity: 0;
+  transform: translateY(80px);
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  .about-section,
+  .section-title,
+  .description-paragraph,
+  .image-wrapper {
+    animation: none !important;
+    transition: opacity 0.3s ease !important;
+  }
+  
+  .about-section.visible {
+    opacity: 1;
+    transform: none;
+  }
+  
+  .about-section.visible .section-title,
+  .about-section.visible .description-paragraph,
+  .about-section.visible .image-wrapper {
+    opacity: 1;
+    transform: none;
+  }
+  
+  .about-container {
+    scroll-behavior: auto;
+  }
+}

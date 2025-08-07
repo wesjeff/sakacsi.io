@@ -4,15 +4,8 @@ export default function Contact() {
   return (
     <div style={styles.container}>
       <h2 style={styles.header}>Contact Me</h2>
-      <p style={styles.text}>Feel free to reach out via email or connect with me on LinkedIn!</p>
       <p style={styles.text}>
-        Email: <a href="mailto:your.email@example.com" style={styles.link}>your.email@example.com</a>
-      </p>
-      <p style={styles.text}>
-        LinkedIn: <a href="https://linkedin.com/in/yourprofile" target="_blank" rel="noopener noreferrer" style={styles.link}>linkedin.com/in/yourprofile</a>
-      </p>
-      <p style={styles.text}>
-        GitHub: <a href="https://github.com/yourusername" target="_blank" rel="noopener noreferrer" style={styles.link}>github.com/yourusername</a>
+        or dont... (wip)
       </p>
     </div>
   );
